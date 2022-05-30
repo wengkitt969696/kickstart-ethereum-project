@@ -1,42 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { Component } from "react";
+import { Card, Button } from "semantic-ui-react";
 import factory from "../ethereum/factory";
-import { Card } from "semantic-ui-react";
-import { Button } from "semantic-ui-react";
+import Layout from "../components/Layout";
+import { Link } from "../routes";
 
-const index = () => {
-	const [campaignsArray, setCampaignsArray] = useState([]);
-	useEffect(() => {
-		fetchData();
-	}, []);
-
-	async function fetchData() {
+class CampaignIndex extends Component {
+	static async getInitialProps() {
 		const campaigns = await factory.methods.getDeployedCampaigns().call();
-		setCampaignsArray(campaigns);
-		console.log(campaigns);
-	}
 
-	function renderCampaigns() {
-		const items = campaignsArray.map((address) => {
+		return { campaigns };
+	}
+	renderCampaigns() {
+		const items = this.props.campaigns.map((address) => {
 			return {
 				header: address,
-				description: <a>View Campaign</a>,
+				description: (
+					<Link route={`/campaigns/${address}`}>
+						<a>View Campaign</a>
+					</Link>
+				),
 				fluid: true,
 			};
 		});
 		return <Card.Group items={items} />;
 	}
-	return (
-		<div>
-			<h3>Open Campaigns</h3>
-			<Button
-				floated="right"
-				content="Create Campaign"
-				icon="add circle"
-				primary
-			/>
-			{campaignsArray && renderCampaigns()}
-		</div>
-	);
-};
+	render() {
+		return (
+			<Layout>
+				<div>
+					<h3>Open Campaigns</h3>
+					<Link route="/campaigns/new">
+						<a>
+							<Button
+								floated="right"
+								content="Create Campaign"
+								icon="add circle"
+								primary
+							/>
+						</a>
+					</Link>
+					{this.renderCampaigns()}
+				</div>
+			</Layout>
+		);
+	}
+}
 
-export default index;
+export default CampaignIndex;
