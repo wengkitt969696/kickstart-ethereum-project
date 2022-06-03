@@ -3,8 +3,6 @@ const Web3 = require("web3");
 const compiledFactory = require("./build/CampaignFactory.json");
 require("dotenv").config();
 
-console.log(process.env.DEV_WALLET_MNEMONIC, process.env.INFURA_API_ENDPOINT);
-
 const provider = new HDWalletProvider(
   process.env.DEV_WALLET_MNEMONIC,
   process.env.INFURA_API_ENDPOINT
